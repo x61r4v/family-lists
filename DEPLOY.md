@@ -17,7 +17,10 @@ This fork adds Cloudflare deployment support to upstream ajrcre/family-lists.
   checks pass.
 
 ## Build & deploy the worker
-1. `npm install`
+1. `npm install` - note: package-lock.json is intentionally not updated in
+   this fork; `@opennextjs/cloudflare` and `wrangler` are pinned to exact
+   versions in package.json (1.20.10 / 4.149.0), the versions this
+   deployment was built and verified with.
 2. **Patch OpenNext (required):** in
    `node_modules/@opennextjs/cloudflare/dist/api/cloudflare-context.js` (or
    `load-manifest.js` in 1.20.x), the manifest glob must include
