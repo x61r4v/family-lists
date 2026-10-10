@@ -12,7 +12,29 @@ interface Driver {
 const globalKey = Symbol.for("family-lists.db");
 type GlobalWithDb = typeof globalThis & { [globalKey]?: Promise<Driver> };
 
+// Cloudflare Workers cannot open raw TCP sockets, so on Workers (and other
+// edge runtimes) we use Neon's serverless driver, which talks to Postgres
+// over HTTPS/WebSockets. On Node (local dev, `next start`) we keep postgres.js.
 async function createPostgresDriver(url: string): Promise<Driver> {
+  const isWorkers =
+    (globalThis as { navigator?: { userAgent?: string } }).navigator?.userAgent ===
+      "Cloudflare-Workers" || !!process.env.CF_WORKER;
+  if (isWorkers) {
+    const { neon } = await import("@neondatabase/serverless");
+    const sql = neon(url);
+    return {
+      async query(text, params = []) {
+        return (await sql.query(text, params)) as unknown as Row[];
+      },
+      async exec(text) {
+        // The HTTP driver runs one statement per call, so split the schema.
+        for (const stmt of text.split(";")) {
+          const trimmed = stmt.trim();
+          if (trimmed) await sql.query(trimmed);
+        }
+      },
+    };
+  }
   const { default: postgres } = await import("postgres");
   const sql = postgres(url, {
     max: 5,
