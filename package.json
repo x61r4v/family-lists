@@ -12,10 +12,15 @@
     "test:e2e": "playwright test",
     "hash-pin": "node scripts/hash-pin.mjs",
     "gen-secret": "node scripts/gen-secret.mjs",
-    "access-link": "node scripts/access-link.mjs"
+    "access-link": "node scripts/access-link.mjs",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
+    "@neondatabase/serverless": "^1.2.0",
+    "@opennextjs/cloudflare": "^1.20.10",
     "next": "16.4.0",
     "postgres": "^3.4.9",
     "react": "19.3.0",
@@ -29,7 +34,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "typescript": "^5",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.3",
+    "wrangler": "^4.149.0"
   },
   "engines": {
     "node": ">=20.12"
