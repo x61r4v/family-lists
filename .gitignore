@@ -50,3 +50,8 @@ next-env.d.ts
 /.agents/
 /.claude/
 /skills-lock.json
+
+# OpenNext
+.open-next
+.dev.vars
+.wrangler
